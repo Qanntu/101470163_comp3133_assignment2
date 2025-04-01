@@ -8,9 +8,8 @@ const resolvers = require("./graphql/resolvers");
 
 
 // configuration of port and URI of MongoDB
-const PORT = process.env.PORT || 8081;
-const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost:27017/assignment2";
-
+const PORT = process.env.PORT || 5000;
+const MONGO_URI = process.env.MONGO_URI;
 
   
 
