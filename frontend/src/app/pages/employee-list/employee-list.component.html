@@ -1,0 +1,51 @@
+<div class="list-container">
+
+  <div class="user-info">
+    <p>🔐 Logged in as: <strong>{{ loggedInUserEmail }}</strong></p>
+    <button (click)="logout()" class="btn-logout">
+      <i class="fas fa-sign-out-alt"></i> Logout
+    </button>
+  </div>
+
+
+    <!-- 🔍 Buscador por Departamento o Designación -->
+  <div class="search-box">
+    <input type="text" [(ngModel)]="searchDepartment" placeholder="Search by Department" />
+    <input type="text" [(ngModel)]="searchDesignation" placeholder="Search by Designation" />
+    <button (click)="searchEmployees()">Search</button>
+    <button (click)="resetSearch()">Reset</button>
+  </div>
+
+
+  <h2>Employee List</h2>
+  <button class="add-btn" (click)="addEmployee()">
+    <i class="fas fa-plus"></i> Add Employee
+  </button>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let emp of employees">
+        <td>{{ emp.first_name }} {{ emp.last_name }}</td>
+        <td>{{ emp.email }}</td>
+        <td>
+          <button class="view-btn" (click)="viewDetails(emp.id)">
+            <i class="fas fa-eye"></i> View
+          </button>
+          <button class="edit-btn" (click)="editEmployee(emp)">
+            <i class="fas fa-edit"></i> Edit
+          </button>
+          <button class="delete-btn" (click)="deleteEmployee(emp.id)">
+            <i class="fas fa-trash-alt"></i> Delete
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

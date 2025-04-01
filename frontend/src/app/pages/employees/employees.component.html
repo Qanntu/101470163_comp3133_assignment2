@@ -1,0 +1,73 @@
+<!-- Botón para mostrar el formulario -->
+<button (click)="showAddForm()">Add Employee</button>
+
+<!-- Formulario mostrado solo cuando showForm = true -->
+<div *ngIf="showForm">
+  <h2>{{ editMode ? 'Edit Employee' : 'Add New Employee' }}</h2>
+
+  <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()" style="margin-bottom: 2rem;">
+    <input type="text" formControlName="first_name" placeholder="First Name" /><br />
+    <input type="text" formControlName="last_name" placeholder="Last Name" /><br />
+    <input type="email" formControlName="email" placeholder="Email" /><br />
+    <input type="text" formControlName="designation" placeholder="Designation" /><br />
+    <input type="text" formControlName="department" placeholder="Department" /><br />
+    <input type="number" formControlName="salary" placeholder="Salary" /><br />
+    <input type="date" formControlName="date_of_joining" /><br />
+
+    <label>Gender:</label>
+    <select formControlName="gender">
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+      <option value="Other">Other</option>
+    </select><br />
+
+    <label>Upload Photo:</label>
+    <input type="file" (change)="onFileSelected($event)" /><br />
+    <img *ngIf="selectedImage" [src]="selectedImage" alt="Employee Photo" width="100" /><br /><br />
+
+    <button type="submit" [disabled]="employeeForm.invalid">
+      {{ editMode ? 'Update' : 'Save' }} Employee
+    </button>
+    <button type="button" (click)="resetForm()">Cancel</button>
+  </form>
+</div>
+
+<hr />
+
+<!-- Lista reducida de empleados -->
+<h2>Employee List</h2>
+<table border="1" width="100%" cellpadding="5">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let emp of employees">
+      <td>{{ emp.first_name }} {{ emp.last_name }}</td>
+      <td>{{ emp.email }}</td>
+      <td>
+        <button (click)="viewDetails(emp)">View Details</button>
+        <button (click)="editEmployee(emp)">Edit</button>
+        <button (click)="deleteEmployee(emp.id)">Delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Detalle del empleado -->
+<div *ngIf="selectedEmployee" style="margin-top: 2rem; border: 1px solid #ccc; padding: 1rem;">
+  <h3>Employee Details</h3>
+  <img *ngIf="selectedEmployee.employee_photo" [src]="selectedEmployee.employee_photo" alt="Employee Photo" width="100" /><br />
+  <p><strong>Name:</strong> {{ selectedEmployee.first_name }} {{ selectedEmployee.last_name }}</p>
+  <p><strong>Email:</strong> {{ selectedEmployee.email }}</p>
+  <p><strong>Department:</strong> {{ selectedEmployee.department }}</p>
+  <p><strong>Designation:</strong> {{ selectedEmployee.designation }}</p>
+  <p><strong>Salary:</strong> ${{ selectedEmployee.salary }}</p>
+  <p><strong>Gender:</strong> {{ selectedEmployee.gender }}</p>
+  <p><strong>Date of Joining:</strong> {{ selectedEmployee.date_of_joining }}</p>
+
+  <button (click)="selectedEmployee = null">Close</button>
+</div>
