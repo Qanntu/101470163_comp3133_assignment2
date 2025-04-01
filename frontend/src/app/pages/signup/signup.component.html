@@ -1,0 +1,28 @@
+<div class="login-container">
+  <h2>Signup</h2>
+
+  <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+    <label for="username">Username:</label>
+    <input type="text" formControlName="username" id="username" />
+    <div class="error" *ngIf="signupForm.get('username')?.touched && signupForm.get('username')?.invalid">
+      Username is required (min 4 characters)
+    </div>
+
+    <label for="email">Email:</label>
+    <input type="email" formControlName="email" id="email" />
+    <div class="error" *ngIf="signupForm.get('email')?.touched && signupForm.get('email')?.invalid">
+      Valid email is required
+    </div>
+
+    <label for="password">Password:</label>
+    <input type="password" formControlName="password" id="password" />
+    <div class="error" *ngIf="signupForm.get('password')?.touched && signupForm.get('password')?.invalid">
+      Password is required (min 6 characters)
+    </div>
+
+    <button type="submit" [disabled]="loading">📝 Signup</button>
+
+    <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
+    <p *ngIf="successMessage" class="success-message">{{ successMessage }}</p>
+  </form>
+</div>
