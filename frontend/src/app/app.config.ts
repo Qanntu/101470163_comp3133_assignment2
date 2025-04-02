@@ -1,4 +1,5 @@
 import { ApplicationConfig, provideZoneChangeDetection, inject } from '@angular/core';
+import { environment } from '../environments/environment';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
@@ -14,11 +15,23 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(withEventReplay()),
     
     provideHttpClient(),
+    /*provideApollo(() => {
+      const httpLink = inject(HttpLink);
+      return {
+        link: httpLink.create({
+          uri: 'http://backend:5000/graphql'
+          //uri: 'http://localhost:8081/graphql', // here backend
+        }),
+        cache: new InMemoryCache(),
+      };
+    }),*/
+
+
     provideApollo(() => {
       const httpLink = inject(HttpLink);
       return {
         link: httpLink.create({
-          uri: 'http://localhost:8081/graphql', // 👈 Aquí tu backend
+          uri: environment.graphqlUri,
         }),
         cache: new InMemoryCache(),
       };
