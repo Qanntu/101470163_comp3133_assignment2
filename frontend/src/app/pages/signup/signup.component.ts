@@ -52,7 +52,7 @@ export class SignupComponent implements OnInit {
     }).subscribe({
       next: (result: any) => {
         const token = result.data.signup;
-        localStorage.setItem('token', token); // 🔐 Guardamos el token
+        localStorage.setItem('token', token); // saving token
         this.successMessage = 'User created and logged in! Redirecting...';
         this.errorMessage = '';
         this.loading = false;

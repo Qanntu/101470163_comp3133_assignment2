@@ -40,12 +40,11 @@ const resolvers = {
         throw new Error("Email already exists");
       }
     
-      // ❌ No hashees manualmente aquí
       const user = new User({ username, email, password });
     
       await user.save();
     
-      // ✅ Genera y devuelve el token
+      // return token
       return jwt.sign({ id: user.id }, "supersecretkey", { expiresIn: "1h" });
     },
 
