@@ -1,7 +1,6 @@
-<!-- Botón para mostrar el formulario -->
+<!-- botton to show employees -->
 <button (click)="showAddForm()">Add Employee</button>
 
-<!-- Formulario mostrado solo cuando showForm = true -->
 <div *ngIf="showForm">
   <h2>{{ editMode ? 'Edit Employee' : 'Add New Employee' }}</h2>
 
@@ -34,7 +33,7 @@
 
 <hr />
 
-<!-- Lista reducida de empleados -->
+
 <h2>Employee List</h2>
 <table border="1" width="100%" cellpadding="5">
   <thead>
@@ -57,7 +56,7 @@
   </tbody>
 </table>
 
-<!-- Detalle del empleado -->
+<!-- employee details -->
 <div *ngIf="selectedEmployee" style="margin-top: 2rem; border: 1px solid #ccc; padding: 1rem;">
   <h3>Employee Details</h3>
   <img *ngIf="selectedEmployee.employee_photo" [src]="selectedEmployee.employee_photo" alt="Employee Photo" width="100" /><br />

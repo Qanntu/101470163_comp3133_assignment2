@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Apollo } from 'apollo-angular';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { jwtDecode } from 'jwt-decode';
 import { EmployeeService } from '../../services/employee.service';
-import gql from 'graphql-tag';
 
 @Component({
   selector: 'app-employee-list',
@@ -16,33 +14,34 @@ import gql from 'graphql-tag';
 })
 export class EmployeeListComponent implements OnInit {
   employees: any[] = [];
+  allEmployees: any[] = []; // Backup all employees
   loggedInUserEmail: string = '';
   searchDepartment: string = '';
   searchDesignation: string = '';
 
   constructor(
-    private employeeService: EmployeeService, 
-    private router: Router,
-    private apollo: Apollo 
+    private employeeService: EmployeeService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     this.getLoggedInUserEmail();
     this.employeeService.getEmployees().subscribe({
-      next: (result: any) => this.employees = result.data.getAllEmployees,
+      next: (result: any) => {
+        this.employees = result.data.getAllEmployees;
+        this.allEmployees = result.data.getAllEmployees;
+      },
       error: (err) => console.error('Error loading employees:', err)
     });
   }
 
   getLoggedInUserEmail() {
-    // Verifica si estamos en navegador (no SSR)
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem('token');
       if (token) {
         try {
           const decodedToken: any = jwtDecode(token);
-          this.loggedInUserEmail = decodedToken.username || ''; // 👈 cambias "email" por "username"
-          console.log('Logged in as:', this.loggedInUserEmail); // ✅ sigue funcionando igual
+          this.loggedInUserEmail = decodedToken.username || '';
         } catch (err) {
           console.error('Invalid token');
         }
@@ -51,44 +50,17 @@ export class EmployeeListComponent implements OnInit {
   }
 
   searchEmployees() {
-    const SEARCH_QUERY = gql`
-      query searchEmployee($department: String, $designation: String) {
-        searchEmployee(department: $department, designation: $designation) {
-          id
-          first_name
-          last_name
-          email
-          designation
-          department
-        }
-      }
-    `;
-  
-    this.apollo.query({
-      query: SEARCH_QUERY,
-      variables: {
-        department: this.searchDepartment || null,
-        designation: this.searchDesignation || null
-      },
-      fetchPolicy: 'no-cache'
-    }).subscribe({
-      next: (result: any) => {
-        this.employees = result.data.searchEmployee;
-      },
-      error: (err) => {
-        console.error('Search failed:', err);
-      }
-    });
+    this.employees = this.allEmployees.filter(emp =>
+      emp.department.toLowerCase().includes(this.searchDepartment.toLowerCase()) &&
+      emp.designation.toLowerCase().includes(this.searchDesignation.toLowerCase())
+    );
   }
 
   resetSearch() {
+    this.employees = this.allEmployees;
     this.searchDepartment = '';
     this.searchDesignation = '';
-    this.ngOnInit(); // Recarga la lista completa
   }
-  
-  
-  
 
   logout() {
     localStorage.removeItem('token');
@@ -104,8 +76,6 @@ export class EmployeeListComponent implements OnInit {
       state: { employee: emp }
     });
   }
-  
-  
 
   addEmployee() {
     this.router.navigate(['/employees/add']);
@@ -117,11 +87,10 @@ export class EmployeeListComponent implements OnInit {
       this.employeeService.deleteEmployee(id).subscribe({
         next: () => {
           alert('Employee deleted');
-          this.ngOnInit(); // Recarga la lista
+          this.ngOnInit();
         },
         error: (err) => alert('Error deleting employee: ' + err.message)
       });
     }
   }
-  
 }
